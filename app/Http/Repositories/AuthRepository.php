@@ -5,6 +5,8 @@ namespace App\Http\Repositories;
 use App\Models\User;
 use App\Http\Traits\ApiDesignTrait;
 use App\Http\Interfaces\AuthInterface;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthRepository implements AuthInterface
 {
@@ -36,8 +38,8 @@ class AuthRepository implements AuthInterface
     protected function respondWithToken($token)
     {
 
-        // $userData = $this->userModel::find(auth()->user()->id);
-        $userData = User::find(auth()->user()->id);
+        // $userData = User::find(auth()->user()->id);
+        $userData = $this->userModel::find(auth()->user()->id);
 
         $userRole = auth()->user()->roleName->name;
 
@@ -53,6 +55,23 @@ class AuthRepository implements AuthInterface
         return $this->ApiResponse(200, 'Done', null, $data);
     }
 
+    public function updatePassword($request)
+    {
+    //     $validation = Validator::make($request->all(),[
+    //         'old_password' => ['required' ,new MatchOldPassword],
+    //         'new_password' => 'required|min:6',
+    //     ]);
+    //     if($validation->fails()){
+    //         return $this->ApiResponse(422,'error',$validation->errors());
+    //     }
+    //     $user = auth()->user();
+
+    //     $user->update([
+    //         'password' => Hash::make($request->new_password),
+    //     ]);
+    //     return $this->ApiResponse(200,'password updated');
+
+    }
 
 
 }

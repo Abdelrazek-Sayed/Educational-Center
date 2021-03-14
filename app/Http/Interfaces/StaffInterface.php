@@ -15,6 +15,8 @@ interface StaffInterface {
 
     public function deleteStaff($request);
 
+    public function specificStaff($request);
+
 
 
 

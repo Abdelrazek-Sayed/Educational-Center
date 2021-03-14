@@ -24,6 +24,21 @@ class ReopsitortyServiceProvider extends ServiceProvider
             'App\Http\Repositories\StaffRepository'
         );
 
+
+        $this->app->bind(
+            'App\Http\Interfaces\teacherInterface',
+            'App\Http\Repositories\teacherRepository'
+        );
+
+        $this->app->bind(
+            'App\Http\Interfaces\groupInterface',
+            'App\Http\Repositories\groupRepository'
+        );
+
+        $this->app->bind(
+            'App\Http\Interfaces\StudentInterface',
+            'App\Http\Repositories\StudentRepository'
+        );
     }
 
     /**

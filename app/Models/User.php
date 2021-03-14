@@ -16,16 +16,19 @@ class User extends Authenticatable implements JWTSubject
 
 
     public function roleName()
-        {
-
-            return $this-> belongsTo(Role::class,'role_id','id');
-            
-        }
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
 
 
+    public function studentGroups()
+    {
+        return $this->hasMany(StudentGroup::class, 'student_id', 'id');
+    }
 
 
-   // Rest omitted for brevity
+
+    // Rest omitted for brevity
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -70,6 +73,8 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     /**

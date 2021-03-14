@@ -15,7 +15,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            
+
             $table->string('name');
             $table->text('body');
             $table->string('image');
@@ -23,8 +23,8 @@ class CreateGroupsTable extends Migration
             $table->bigInteger('teacher_id')->unsigned();
             $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->bigInteger('craeted_by')->unsigned();
-            $table->foreign('craeted_by')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('created_by')->unsigned();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
 
 
             $table->timestamps();

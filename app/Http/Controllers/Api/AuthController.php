@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\AuthInterface;
-
+use Illuminate\Support\Facades\Request;
 
 class AuthController extends Controller
 {
@@ -22,8 +22,13 @@ class AuthController extends Controller
 
     public function login()
     {
-        $this->authInterface->login();
+        return  $this->authInterface->login();
     }
 
 
+    public function updatePassword(Request $request)
+    {
+
+        return $this->authInterface->updatePassword($request);
+    }
 }
