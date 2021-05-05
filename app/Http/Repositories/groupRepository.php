@@ -39,7 +39,6 @@ class groupRepository implements groupInterface
         }
 
         $teacher = $this->userModel::whereHas('roleName', function ($query) {
-
             return $query->where('is_teacher', 1);
         })->find($request->teacher_id);
 

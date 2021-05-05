@@ -22,18 +22,10 @@ class roles
 
         $userRole = auth()->user()->roleName->name;
         $allowedRoles = explode('.', $roles);
-        // dd($allowedRoles);
 
         if (!in_array($userRole, $allowedRoles)) {
             return $this->ApiResponse(404, 'you do not have permission');
         }
         return $next($request);
     }
-
-
-   
-
-
-
-
 }

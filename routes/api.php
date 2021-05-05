@@ -1,12 +1,17 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\apiController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ExamController;
 use App\Http\Controllers\Api\groupController;
 use App\Http\Controllers\Api\StaffController;
+use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\Api\EndUserController;
+use App\Http\Controllers\Api\SessionController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\teacherController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\StudentExamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,18 +28,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('test/{name}', [apiController::class, 'testApi']);
 
 // login
-Route::group([
-
-    'middleware' => 'api',
-    'prefix' => 'auth',
-
-], function ($router) {
-
+// Route::group(['middleware' => ['api'],'prefix' => 'auth',], function ($router) {
+Route::group(['middleware' => ['api'], 'prefix' => 'auth',], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('add/test/user', [AuthController::class, 'addTestUser']);
 });
 
-Route::group(['prefix' => 'admin', 'middleware'=>['jwt.Token', 'roles:Admin']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['jwt.Token', 'roles:Admin']], function () {
     // staff
     Route::post('staff/add', [StaffController::class, 'addStaff']);
     Route::get('staff/all', [StaffController::class, 'allStaff']);
@@ -43,31 +42,72 @@ Route::group(['prefix' => 'admin', 'middleware'=>['jwt.Token', 'roles:Admin']], 
     Route::get('staff/specific', [StaffController::class, 'specificStaff']);
 });
 
- 
-Route::group(['prefix' => 'dashboard', 'middleware'=>['jwt.Token', 'roles:Admin.Support.Secretary']], function () {
+Route::group(['prefix' => 'dashboard', 'middleware' => ['jwt.Token', 'roles:Admin.Support.Secretary']], function () {
     // teachers
-    Route::post('teacher/add', [teacherController::class, 'addTeacher']);
-    Route::get('teacher/all', [teacherController::class, 'allTeacher']);
-    Route::post('teacher/update', [teacherController::class, 'updateTeacher']);
-    Route::post('teacher/delete', [teacherController::class, 'deleteTeacher']);
-    Route::get('teacher/specific', [teacherController::class, 'specificTeacher']);
+    Route::prefix('teacher')->group(function () {
+
+        Route::post('/add', [teacherController::class, 'addTeacher']);
+        Route::get('/all', [teacherController::class, 'allTeacher']);
+        Route::post('/update', [teacherController::class, 'updateTeacher']);
+        Route::post('/delete', [teacherController::class, 'deleteTeacher']);
+        Route::get('/specific', [teacherController::class, 'specificTeacher']);
+    });
 
     // groups
-    Route::post('group/add', [groupController::class, 'addGroup']);
-    Route::get('group/all', [groupController::class, 'allGroup']);
-    Route::post('group/update', [groupController::class, 'updateGroup']);
-    Route::post('group/delete', [groupController::class, 'deleteGroup']);
-    Route::get('group/specific', [groupController::class, 'specificGroup']);
+    Route::prefix('group')->group(function () {
+        Route::post('/add', [groupController::class, 'addGroup']);
+        Route::get('/all', [groupController::class, 'allGroup']);
+        Route::post('/update', [groupController::class, 'updateGroup']);
+        Route::post('/delete', [groupController::class, 'deleteGroup']);
+        Route::get('/specific', [groupController::class, 'specificGroup']);
+    });
 
     // students
-    Route::post('student/add', [StudentController::class, 'addStudent']);
-    Route::get('student/all', [StudentController::class, 'allStudents']);
-    Route::post('student/update', [StudentController::class, 'updateStudent'])->middleware('jwt.Token');
-    Route::post('student/delete', [StudentController::class, 'deleteStudent']);
-    Route::get('student/specific', [StudentController::class, 'specificStudent']);
+    Route::prefix('student')->group(function () {
+        Route::post('/add', [StudentController::class, 'addStudent']);
+        Route::get('/all', [StudentController::class, 'allStudents']);
+        Route::post('/update', [StudentController::class, 'updateStudent'])->middleware('jwt.Token');
+        Route::post('/delete', [StudentController::class, 'deleteStudent']);
+        Route::get('student/specific', [StudentController::class, 'specificStudent']);
+    });
     Route::post('studentGroup/update', [StudentController::class, 'updateStudentGroup']);
     Route::post('studentGroup/delete', [StudentController::class, 'deleteStudentGroup']);
+
+    // sessions
+    Route::prefix('session')->group(function () {
+        Route::get('/all', [SessionController::class, 'allSessions']);
+        Route::post('/add', [SessionController::class, 'addSession']);
+        Route::post('/delete', [SessionController::class, 'deleteSession']);
+    });
+
+    //complaints
+    Route::prefix('complaint')->group(function () {
+        Route::get('/all', [ComplaintController::class, 'allComplaints']);
+        Route::post('/get', [ComplaintController::class, 'getComplaint']);
+        Route::post('/delete', [ComplaintController::class, 'deleteComplaint']);
+    });
 });
+
+Route::prefix('enduser')->middleware(['jwt.Token', 'roles:Teacher.Student'])->group(function () {
+    Route::get('groups', [EndUserController::class, 'userGroups']);
+
+    Route::prefix('exams')->group(function () {
+        Route::get('types', [ExamController::class, 'examTypes']);
+        Route::get('all', [ExamController::class, 'allExams']);
+        Route::post('add', [ExamController::class, 'createExam'])->middleware('roles:Teacher');
+        Route::post('update', [ExamController::class, 'updateExam'])->middleware('roles:Teacher');
+        Route::post('delete', [ExamController::class, 'deleteExam'])->middleware('roles:Teacher');
+        Route::post('status/update', [ExamController::class, 'updateExamStatus'])->middleware('roles:Teacher');
+
+        // questions 
+        Route::post('questions/add', [ExamController::class, 'addQuestion'])->middleware('roles:Teacher');
+        Route::post('new', [StudentExamController::class, 'newExams'])->middleware('roles:Student');
+        Route::post('student/new', [StudentExamController::class, 'newStudentExam'])->middleware('roles:Student');
+        Route::post('student/store', [StudentExamController::class, 'storeStudentExam'])->middleware('roles:Student');
+    });
+});
+
+ 
 
 // Route::prefix('admin')->group(function(){
 

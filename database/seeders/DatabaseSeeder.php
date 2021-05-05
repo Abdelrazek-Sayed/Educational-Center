@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ExamType;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -34,5 +35,12 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'role_id' => 1,
         ]);
+
+        $eaxmTypes = ['True&False', 'Choices', 'Essayes'];
+        foreach ($eaxmTypes as $eaxmType) {
+            ExamType::create([
+                'name' => $eaxmType,
+            ]);
+        }
     }
 }

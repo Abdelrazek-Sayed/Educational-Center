@@ -11,5 +11,10 @@ class Group extends Model
 
     protected $fillable = ['name', 'body', 'image', 'teacher_id','created_by'];
 
-    protected $hidden  = ['created_at','updated_at'];
+    protected $hidden  = ['created_at','updated_at','created_by'];
+
+    public function students()
+    {
+        return $this->hasMany(StudentGroup::class,'group_id','id');
+    }
 }

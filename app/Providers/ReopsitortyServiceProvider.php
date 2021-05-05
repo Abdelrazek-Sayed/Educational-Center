@@ -39,6 +39,36 @@ class ReopsitortyServiceProvider extends ServiceProvider
             'App\Http\Interfaces\StudentInterface',
             'App\Http\Repositories\StudentRepository'
         );
+
+        $this->app->bind(
+            'App\Http\Interfaces\SessionInterface',
+            'App\Http\Repositories\SessionRepository'
+        );
+
+        $this->app->bind(
+            'App\Http\Interfaces\SupscriptionInterface',
+            'App\Http\Repositories\SupscriptionRepository'
+        );
+
+
+        $this->app->bind(
+            'App\Http\Interfaces\ComplaintInterface',
+            'App\Http\Repositories\ComplaintRepository'
+        );
+        $this->app->bind(
+            'App\Http\Interfaces\EndUserInterface',
+            'App\Http\Repositories\EndUserRepository'
+        );
+
+        $this->app->bind(
+            'App\Http\Interfaces\ExamInterface',
+            'App\Http\Repositories\ExamRepository'
+        );
+
+        $this->app->bind(
+            'App\Http\Interfaces\StudentExamInterface',
+            'App\Http\Repositories\StudentExamRepository'
+        );
     }
 
     /**

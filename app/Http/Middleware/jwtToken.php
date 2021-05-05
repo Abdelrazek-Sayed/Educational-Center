@@ -24,24 +24,19 @@ class jwtToken
     public function handle(Request $request, Closure $next)
     {
         try {
-
             JWTAuth::parseToken()->authenticate();
-
         } catch (Exception $e) {
 
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
 
                 return $this->ApiResponse(422, 'Expired Token');
-
             } elseif ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
 
                 return $this->ApiResponse(422, 'Invalid Token');
-
             } else {
 
                 return $this->ApiResponse(404, 'token not found');
             }
-
         }
         return $next($request);
     }
